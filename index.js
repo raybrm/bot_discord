@@ -9,7 +9,7 @@ const client = new Discord.Client();
 
 client.login(token);
 
-client.commands = new Discord.Collection(); // stocke toutes les commandes : {run: xx, name : 'xx'}
+client.commands = new Discord.Collection(); // stock toutes les commandes : {run: xx, name : 'xx'}
 
 // Lire tous les fichiers js. Un fichier correspond à une commande. ex => !play, !kick, !info, !lvl, ...
 
@@ -23,7 +23,7 @@ fs.readdir('./commands', (err, files) => {
     })
 })
 
-// au lancement du node index.js
+// au lancement du bot discord
 client.on('ready', () => { // 'on' permet d'écouter un évenement; ici l'évenement c'est ready
     console.log(`Logged in as ${client.user.tag}!`);
 });
@@ -56,7 +56,7 @@ client.on('message', message => {
 
 // Listener sur l'arrivé de membre
 client.on('guildMemberAdd', member => {
-    member.guild.channels.cache.get(config.greeting.channel).send(`${member} a rejoint le serveur. Nous ${member.guild.memberCount}`)
+    member.guild.channels.cache.get(config.greeting.channel).send(`${member} a rejoint le serveur. Nous sommes ${member.guild.memberCount} désormais`)
     member.roles.add(config.greeting.role)
 })
 
