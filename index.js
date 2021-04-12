@@ -1,10 +1,13 @@
+require('dotenv').config() // permet d'utiliser les varaibles d'environnement dans le fichier .env
 const Discord = require('discord.js');
 const config = require('./config.json');
 const fs = require('fs')
 
+const token = process.env.token;
+
 const client = new Discord.Client();
 
-client.login(config.token);
+client.login(token);
 
 client.commands = new Discord.Collection(); // stocke toutes les commandes : {run: xx, name : 'xx'}
 
