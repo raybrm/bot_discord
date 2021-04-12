@@ -3,6 +3,9 @@ const Discord = require('discord.js');
 const config = require('./config.json');
 const fs = require('fs')
 
+const mongo = require('./mongo')
+const levels = require('./levels')
+
 const token = process.env.token;
 
 const client = new Discord.Client();
@@ -24,23 +27,25 @@ fs.readdir('./commands', (err, files) => {
 })
 
 // au lancement du bot discord
-client.on('ready', () => { // 'on' permet d'écouter un évenement; ici l'évenement c'est ready
+client.on('ready', async () => { // 'on' permet d'écouter un évenement; ici l'évenement c'est ready
     console.log(`Logged in as ${client.user.tag}!`);
+
+    await mongo().then(() => console.log("connected to db"))
+                 .catch((err) => console.log("Unable to connect to db", err))
+
+    levels(client)
 });
 
 // listener au niveau de l'evenement message quand un message apparait dans le chat.
 client.on('message', message => {
 
     
-    if (message.type !== 'DEFAULT' || message.author.bot) {
-        console.log('not a command')
-        return;
-    }
+    if (message.type !== 'DEFAULT' || message.author.bot) return;
 
     console.log(message.author.discriminator)
-    if (message.author.discriminator === '9819') {
+    if (message.author.discriminator === '8331') { // Syna number
 
-        message.reply("dominique")
+        message.reply("Le fils de Dominique a parlé")
     };
     
     const args = message.content.trim().split(/ +/g)
@@ -64,3 +69,5 @@ client.on('guildMemberAdd', member => {
 client.on('guildMemberRemove', member => {
     member.guild.channels.cache.get(config.greeting.channel).send(`${member.user.tag} a quitté le serveur...`)
 })
+
+// rajouter les membres à chaque fois qu'il parle pour la première fois (voir s'il existe)
