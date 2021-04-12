@@ -43,10 +43,10 @@ client.on('message', message => {
     if (message.type !== 'DEFAULT' || message.author.bot) return;
 
     console.log(message.author.discriminator)
-    if (message.author.discriminator === '8331') { // Syna number
+    // if (message.author.discriminator === '8331') { // Syna number
 
-        message.reply("Le fils de Dominique a parlé")
-    };
+    //     message.reply("Le fils de Dominique a parlé")
+    // };
     
     const args = message.content.trim().split(/ +/g)
     const commandName = args.shift().toLocaleLowerCase()
