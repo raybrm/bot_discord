@@ -46,7 +46,7 @@ const addXP = (guildId, userId, xpToAdd, message) => {
             console.log(memberUpdated)
             let { xp, level } = memberUpdated
             const needed = getNeededXp(level)
-            // 1 = 100
+            // lvl 1 = 100 xp
             // 80 (+25) -> 105
             //level = 2
             // 105 -= needed (100) 
