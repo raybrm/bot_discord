@@ -21,7 +21,7 @@ const setRole = (level, member) => {// donner le role en fonction du level
     switch (level) {
         case 5:
             console.log('reach level 5')
-            member.roles.add(condig.roles.level_5)
+            member.roles.add(config.roles.level_5)
             break
         case 10:
             break   
