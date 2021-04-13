@@ -1,5 +1,7 @@
+const Discord = require('discord.js');
 const mongo = require('../mongo')
 const member = require("../models/member");
+
 
 module.exports = { // on export un objet qui contient une fonction et un nom
     run : (message, args, client) => {
@@ -15,7 +17,10 @@ const getLevel = (guildId, userId, message) => {
              member.findOne({guildId, userId})
                    .then(result => {
                        const { xp, level } = result
-                       message.reply(`Voici ton niveau actuel ${level} avec ${xp} xp !`)
+                       var embed = new Discord.MessageEmbed().setColor("#0099FF")
+                                        .setTitle(`Tu es niveau ${level} avec ${xp} xp !`)
+                       message.channel.send(embed)
+                       //message.reply(`Voici ton niveau actuel ${level} avec ${xp} xp !`)
                    })
          })
 }

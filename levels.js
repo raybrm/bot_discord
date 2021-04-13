@@ -1,6 +1,6 @@
 const mongo = require('./mongo')
-const memberSchema = require('./models/member')
 const member = require('./models/member')
+const config = require('./config.json');
 
 //https://www.pierre-giraud.com/javascript-apprendre-coder-cours/introduction-asynchrone/
 module.exports = (client) => {
@@ -15,6 +15,18 @@ module.exports = (client) => {
 
 const getNeededXp = level => level * 100 // au niveau tu as besoin de 100 xp pour passé au prochain niv; lvl 2 => 200 etc...
 
+const setRole = (level, member) => {// donner le role en fonction du level
+    console.log(level)
+    console.log(member)
+    switch (level) {
+        case 5:
+            console.log('reach level 5')
+            member.roles.add(condig.roles.level_5)
+            break
+        case 10:
+            break   
+    }
+}
 // appel asynchrone pour ne pas bloquer le thread lors de l'appel à la db
 // dans le cas où ça sera long
 const addXP = async (guildId, userId, xpToAdd, message) => {
@@ -32,7 +44,7 @@ const addXP = async (guildId, userId, xpToAdd, message) => {
         }, {
             upsert: true,
             new: true
-        }).then(memberUpdated => {
+        }).then( memberUpdated => {
             console.log(memberUpdated)
             let { xp, level } = memberUpdated
             const needed = getNeededXp(level)
@@ -47,17 +59,18 @@ const addXP = async (guildId, userId, xpToAdd, message) => {
 
                 message.reply(`Félicitation tu es maintenant level ${level} avec ${xp} expérience ! Tu as besoin de 
                 ${getNeededXp(level)} Xp pour atteindre le prochain niveau !`)
+                
+                setRole(level, message.member)
 
-                member.updateOne({ // attend le resultat grâce à await
+                member.updateOne({ // update le level
                     guildId,
                     userId
                 }, {
                     level,
                     xp
-                }).then(() => { // ferme la connexion
-                    mongoose.connection.close().then(() => console.log('connexion closed'))
                 })
             }
+            mongoose.connection.close().then(() => console.log('connexion closed'))
         })
    }) 
 } 
