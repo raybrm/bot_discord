@@ -11,12 +11,12 @@ module.exports = (client) => {
     })
 }
 
-const getNeededXp = level => level * level * 100 // au niveau tu as besoin de 100 xp pour passé au prochain niv; lvl 2 => 200 etc...
+const getNeededXp = level => level * 100 // au niveau tu as besoin de 100 xp pour passé au prochain niv; lvl 2 => 200 etc...
 
 // appel asynchrone pour ne pas bloquer le thread lors de l'appel à la db
 // dans le cas où ça sera long
 const addXP = async (guildId, userId, xpToAdd, message) => {
-    await mongo().then(async mongoose => { 
+    await mongo().then(mongoose => { 
         member.findOneAndUpdate(  // update ou rajoute s'il n'existe pas 
         {
             guildId,
@@ -43,16 +43,19 @@ const addXP = async (guildId, userId, xpToAdd, message) => {
                 ++level
                 xp -= needed
 
-                message.reply(`Félicitation tu es maintenant level ${level} avec ${xp} expérience`)
+                message.reply(`Félicitation tu es maintenant level ${level} avec ${xp} expérience ! Tu as besoin de 
+                ${getNeededXp(level)} Xp pour atteindre le prochain niveau !`)
+
                 member.updateOne({ // attend le resultat grâce à await
                     guildId,
                     userId
                 }, {
                     level,
                     xp
+                }).then(() => { // ferme la connexion
+                    mongoose.connection.close().then(() => console.log('connexion closed'))
                 })
             }
-            mongoose.connection.close()
         })
    }) 
 } 
