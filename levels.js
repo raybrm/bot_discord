@@ -16,8 +16,6 @@ module.exports = (client) => {
 const getNeededXp = level => level * 100 // au niveau tu as besoin de 100 xp pour passé au prochain niv; lvl 2 => 200 etc...
 
 const setRole = (level, member) => {// donner le role en fonction du level
-    console.log(level)
-    console.log(member)
     switch (level) {
         case 5:
             console.log('reach level 5')
@@ -27,28 +25,27 @@ const setRole = (level, member) => {// donner le role en fonction du level
             break   
     }
 }
-// appel asynchrone pour ne pas bloquer le thread lors de l'appel à la db
-// dans le cas où ça sera long
-const addXP = async (guildId, userId, xpToAdd, message) => { // on lache le thread pendant que l'oppération avec la db se fait
-    await mongo().then( mongoose => {
-        member.findOneAndUpdate(  // update ou rajoute s'il n'existe pas 
-        {
-            guildId,
-            userId
-        }, {
-            guildId,
-            userId,
-            $inc: {
-                xp: xpToAdd
+
+const addXP = (guildId, userId, xpToAdd, message) => {
+     mongo().then( mongoose => { member.findOneAndUpdate
+        (  // update ou rajoute s'il n'existe pas 
+            {
+                guildId,
+                userId
+            }, {
+                guildId,
+                userId,
+                $inc: {
+                    xp: xpToAdd
+                }
+            }, {
+                upsert: true,
+                new: true
             }
-        }, {
-            upsert: true,
-            new: true
-        }).then( memberUpdated => {
+        ).then(async memberUpdated => {
             console.log(memberUpdated)
             let { xp, level } = memberUpdated
             const needed = getNeededXp(level)
-
             // 1 = 100
             // 80 (+25) -> 105
             //level = 2
@@ -62,7 +59,7 @@ const addXP = async (guildId, userId, xpToAdd, message) => { // on lache le thre
                 
                 setRole(level, message.member)
 
-                member.updateOne({ // update le level
+               await member.updateOne({ // update le level --> obliger d'attendre sinon la connexion se ferme
                     guildId,
                     userId
                 }, {
