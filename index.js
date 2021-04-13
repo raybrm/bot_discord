@@ -33,7 +33,7 @@ client.on('ready', async () => { // 'on' permet d'écouter un évenement; ici l'
     await mongo().then(() => console.log("connected to db"))
                  .catch((err) => console.log("Unable to connect to db", err))
 
-    levels(client)
+    levels(client) // attend que la connexion soit établie
 });
 
 // listener au niveau de l'evenement message quand un message apparait dans le chat.
@@ -42,7 +42,7 @@ client.on('message', message => {
     
     if (message.type !== 'DEFAULT' || message.author.bot) return;
 
-    console.log(message.author.discriminator)
+    //console.log(message.author.discriminator)
     // if (message.author.discriminator === '8331') { // Syna number
 
     //     message.reply("Le fils de Dominique a parlé")
