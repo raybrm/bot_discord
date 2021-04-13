@@ -29,8 +29,8 @@ const setRole = (level, member) => {// donner le role en fonction du level
 }
 // appel asynchrone pour ne pas bloquer le thread lors de l'appel à la db
 // dans le cas où ça sera long
-const addXP = async (guildId, userId, xpToAdd, message) => {
-    await mongo().then(mongoose => { 
+const addXP = async (guildId, userId, xpToAdd, message) => { // on lache le thread pendant que l'oppération avec la db se fait
+    await mongo().then( mongoose => {
         member.findOneAndUpdate(  // update ou rajoute s'il n'existe pas 
         {
             guildId,
